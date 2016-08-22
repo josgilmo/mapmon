@@ -1,0 +1,25 @@
+{
+    "name": "josgilmo/mapmon",
+    "type": "library",
+    "description": "Yet another MongoDB ODM for PHP. Nothing unnecessary, with easy joins.",
+    "keywords": ["mongo", "mongodb", "odm", "php", "object document mapper"],
+    "homepage": "https://github.com/josgilmo/mapmon",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "José Gil",
+            "email": "jose.gilmolina@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0",
+        "mongodb/mongodb": "^1.0"
+    },    
+    "require-dev": {
+        "phpunit/phpunit": "5.5.*"
+    },
+    "autoload": {
+        "psr-4": { "Mapmon\\": "src" }
+    }
+}

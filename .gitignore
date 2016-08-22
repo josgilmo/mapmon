@@ -1,0 +1,5 @@
+report/
+vendor/
+test-old/
+README-temp.md
+composer.lock

@@ -2,9 +2,9 @@
 language: php
 php:
   - '7.0'
-  - hhvm
 
 before_script:
+  - sudo apt-get update
   - sudo apt-get install php-mongodb
   - make deps
 

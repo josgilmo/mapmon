@@ -11,3 +11,10 @@ before_script:
   - composer update
 #  - make deps
 
+after_script:
+  - php vendor/bin/coveralls -v
+
+notifications:
+  email:
+    - jose.gilmolina@gmail.com
+

@@ -8,5 +8,6 @@ before_script:
   - sudo apt-get update
 #  - sudo apt-get install php-mongodb
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - composer update
 #  - make deps
 

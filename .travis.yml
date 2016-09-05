@@ -5,5 +5,6 @@ php:
   - hhvm
 
 before_script:
+  - sudo apt-get install php-mongodb
   - make deps
 

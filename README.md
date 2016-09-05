@@ -2,6 +2,10 @@
 # Mapmon
 ### Yet another MongoDB ODM for PHP
 
+[![Build Status](https://travis-ci.org/josgilmo/mapmon.png?branch=master)](https://travis-ci.org/josgilmo/mapmon)
+[![Coverage Status](https://coveralls.io/repos/github/josgilmo/mapmon/badge.svg?branch=master)](https://coveralls.io/github/josgilmo/mapmon?branch=master)
+
+
 - [What's that?](#whatsthat)
 
 - [Issues](#issues)

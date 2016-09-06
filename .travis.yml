@@ -5,14 +5,14 @@ php:
 
 before_script:
 #  - sudo apt-get update && sudo apt-get install -my software-properties-common && sudo add-apt-repository -y ppa:ondrej/php
-  - sudo apt-get update
+#  - sudo apt-get update
 #  - sudo apt-get install php-mongodb
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - composer update
+  - composer install
 #  - make deps
 
-after_script:
-  - php vendor/bin/coveralls -v
+#after_script:
+#  - php vendor/bin/coveralls -v
 
 notifications:
   email:

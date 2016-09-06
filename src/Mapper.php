@@ -114,8 +114,8 @@ class Mapper
      */
     public function findById($id)
     {
-        if ( !$id instanceof \MongoDB\BSON\ObjectID ) {
-            $id = new \MongoDB\BSON\ObjectID( $id );
+        if (!$id instanceof \MongoDB\BSON\ObjectID) {
+            $id = new \MongoDB\BSON\ObjectID($id);
         }
 
         return $this->findOne(array('_id' => $id));
@@ -145,7 +145,7 @@ class Mapper
      *
      * @return Model|null
      */
-    public function fetchObject($result)
+    protected function fetchObject($result)
     {
         return is_array($result) ? new $this->_modelClassName($result) : null;
     }
@@ -240,14 +240,13 @@ class Mapper
      */
     public function get()
     {
-
         $this->_checkCursor();
         $result = array();
         foreach ($this->_cursor as $key => $item) {
-           $d = get_object_vars($item->bsonSerialize());
-           $d =  $this->fetchObject($d);
+            $d = get_object_vars($item->bsonSerialize());
+            $d =  $this->fetchObject($d);
 
-           $result[$key] = $d;
+            $result[$key] = $d;
         }
 
         return $result;
@@ -274,7 +273,6 @@ class Mapper
 */
     }
 
-
     /**
      * Gets MongoCursor.
      *
@@ -284,7 +282,6 @@ class Mapper
     {
         return $this->_cursor;
     }
-
 
     /**
      * Sets database. That needs to be performed before you can get any data.
@@ -336,14 +333,19 @@ class Mapper
      *
      * @param array $array Document
      *
-     * @return array|string|Model
+     * @return Model
      */
     protected function _fetchOne($array)
     {
+        if (is_null($array)) {
+            return;
+        }
         $d = get_object_vars($array->bsonSerialize());
         $d =  $this->fetchObject($d);
 
         return  $d;
+
+        return;
     }
 
     /**

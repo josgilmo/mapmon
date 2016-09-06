@@ -95,6 +95,10 @@ class Model
 	{
 	    return null;
 	}
+
+    public function setDafaultCollectionName($name) {
+        self::$_collectionName = $name;
+    }
 	
 	/**
 	 * Fills object with variables.
@@ -171,6 +175,7 @@ class Model
 		return static::$_connectionName;
 	}	
 
+
 	/**
 	 * Saves object to database.
 	 * Adds timestamps if wanted in $timestamps.
@@ -229,12 +234,14 @@ class Model
 	/**
 	 * Gets object by its id.
 	 * 
-	 * @param string|MongoId $id Can be passed as string or MongoId
+	 * @param string|\MongoDB\BSON\ObjectID $id Can be passed as string or MongoId
 	 * @return Model
 	 */
 	public static function findById( $id )
 	{
-        $idObj = new \MongoDB\BSON\ObjectID($id);
+        if(is_string($id)) {
+            $id = new \MongoDB\BSON\ObjectID($id);
+        }
 
 		return static::getMapper()->findOne(["_id" => $idObj] );
 	}

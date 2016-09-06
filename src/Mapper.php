@@ -150,50 +150,6 @@ class Mapper
         return is_array($result) ? new $this->_modelClassName($result) : null;
     }
 
-    /**
-     * Performs sort on MongoCursor.
-     *
-     * @param array $array
-     *
-     * @return Mapper
-     */
-    public function sort($array)
-    {
-        $this->_checkCursor();
-        $this->_cursor->sort($array);
-
-        return $this;
-    }
-
-    /**
-     * Performs limit on MongoCursor.
-     *
-     * @param int $num
-     *
-     * @return Mapper
-     */
-    public function limit($num)
-    {
-        $this->_checkCursor();
-        $this->_cursor->limit($num);
-
-        return $this;
-    }
-
-    /**
-     * Performs skip on MongoCursor.
-     *
-     * @param int $num
-     *
-     * @return Mapper
-     */
-    public function skip($num)
-    {
-        $this->_checkCursor();
-        $this->_cursor->skip($num);
-
-        return $this;
-    }
 
     /**
      * Writes informations about joins.

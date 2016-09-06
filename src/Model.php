@@ -96,7 +96,7 @@ class Model
 	    return null;
 	}
 
-    public function setDafaultCollectionName($name) {
+    public static function setDafaultCollectionName($name) {
         self::$_collectionName = $name;
     }
 	

@@ -214,7 +214,7 @@ class Model
 		}
 */
 
-		$result = static::getMapper()->insertOne( get_object_vars( $this ) );
+		$result = static::getMapper()->save( get_object_vars( $this ) );
 		$this->id = (string) $this->_id;
 
 		return $result;
@@ -243,7 +243,7 @@ class Model
             $id = new \MongoDB\BSON\ObjectID($id);
         }
 
-		return static::getMapper()->findOne(["_id" => $idObj] );
+		return static::getMapper()->findOne(["_id" => $id] );
 	}
 	
 	/**

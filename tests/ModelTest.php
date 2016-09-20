@@ -55,7 +55,6 @@ class ModelTest extends TestCase
         $model->getCollectionName();
     }
 
-
     public function testRemove() {
 
         $connection = new \MongoDB\Client("mongodb://mongo:27017");

@@ -184,6 +184,7 @@ class Model
 	 */
 	public function save()
 	{
+        $existingDocument = $this->hasMongoId();
 		if ( static::$timestamps ) {
 			if ( !$this->hasMongoId() ) {
 				$this->created_at = new \MongoDB\BSON\UTCDateTime();
@@ -213,8 +214,12 @@ class Model
 			}
 		}
 */
+        if ($existingDocument) {
+		    $result = static::getMapper()->updateOne( get_object_vars( $this ) );
+        } else {
+		    $result = static::getMapper()->insertOne( get_object_vars( $this ) );
+        }
 
-		$result = static::getMapper()->insertOne( get_object_vars( $this ) );
 		$this->id = (string) $this->_id;
 
 		return $result;

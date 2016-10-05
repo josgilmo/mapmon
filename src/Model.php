@@ -215,9 +215,9 @@ class Model
 		}
 */
         if ($existingDocument) {
-		    $result = static::getMapper()->updateOne( get_object_vars( $this ) );
+            $result = static::getMapper()->updateOne( ["_id" => $this->_id] , ['$set' => get_object_vars( $this )] );
         } else {
-		    $result = static::getMapper()->insertOne( get_object_vars( $this ) );
+            $result = static::getMapper()->insertOne( get_object_vars( $this ) );
         }
 
 		$this->id = (string) $this->_id;

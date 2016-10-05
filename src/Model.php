@@ -239,11 +239,11 @@ class Model
 	 */
 	public static function findById( $id )
 	{
-        if(is_string($id)) {
-            $id = new \MongoDB\BSON\ObjectID($id);
-        }
+	    if(is_string($id)) {
+	        $id = new \MongoDB\BSON\ObjectID($id);
+	    }
 
-		return static::getMapper()->findOne(["_id" => $idObj] );
+	    return static::getMapper()->findOne(["_id" => $id] );
 	}
 	
 	/**

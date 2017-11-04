@@ -7,9 +7,12 @@ before_script:
 #  - sudo apt-get update && sudo apt-get install -my software-properties-common && sudo add-apt-repository -y ppa:ondrej/php
 #  - sudo apt-get update
 #  - sudo apt-get install php-mongodb
+  - sudo apt-get install php-mbstring php-xdebug
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - composer install
-#  - make deps
+
+script:
+  - make test
 
 #after_script:
 #  - php vendor/bin/coveralls -v

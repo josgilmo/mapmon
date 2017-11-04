@@ -5,7 +5,6 @@ namespace tests;
 use PHPUnit\Framework\TestCase;
 use Mapmon\Model;
 use Mapmon\Mapper;
-use Model\SampleModel;
 use Prophecy\Argument;
 
 class MapperTest extends TestCase
@@ -14,12 +13,12 @@ class MapperTest extends TestCase
     {
         $connection = new \MongoDB\Client('mongodb://mongo:27017');
         \Mapmon\Mapper::setDatabase($connection->sample);
-        Model::setDafaultCollectionName("default"); 
+        Model::setDafaultCollectionName("default");
     }
 
 
-    public function testFindOneOnEmptyCollection() {
-
+    public function testFindOneOnEmptyCollection()
+    {
         $model = $this->prophesize(Model::class);
         $mapper = new Mapper(Model::class);
         
@@ -28,14 +27,14 @@ class MapperTest extends TestCase
         $database->default = $collection->reveal();
 
         Mapper::setDatabase($database->reveal());
-        Model::setDafaultCollectionName("default"); 
+        Model::setDafaultCollectionName("default");
 
         $res = $mapper->findOne();
         $this->assertNull($res);
     }
 
-    public function testFindWithoutResultsCollection() {
-
+    public function testFindWithoutResultsCollection()
+    {
         $model = $this->prophesize(Model::class);
         $mapper = new Mapper(Model::class);
         
@@ -60,19 +59,19 @@ class MapperTest extends TestCase
     {
         $this->markTestIncomplete();
 
-/*
-        $data = $this->_getSimpleData();
-        $model = $this->prophesize(Model::class);
-        //$modelProphecy->_collectionName = "collection";
-        $mapper = new Mapper($model->reveal());
-
-        //$result = $mapper->fetchObject($data);
-        $this->assertInstanceOf('\Model\Simple', $result);
-        $this->assertSame($data, get_object_vars($result));
-*/
+        /*
+                $data = $this->_getSimpleData();
+                $model = $this->prophesize(Model::class);
+                //$modelProphecy->_collectionName = "collection";
+                $mapper = new Mapper($model->reveal());
+        
+                //$result = $mapper->fetchObject($data);
+                $this->assertInstanceOf('\Model\Simple', $result);
+                $this->assertSame($data, get_object_vars($result));
+        */
     }
 
-    protected function _getSimpleData()
+    protected function getSimpleData()
     {
         return array('test' => 'test');
     }

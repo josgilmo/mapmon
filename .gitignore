@@ -3,3 +3,7 @@ vendor/
 test-old/
 README-temp.md
 composer.lock
+.php_cs.cache
+*.swp
+bin/
+.idea/

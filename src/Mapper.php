@@ -15,28 +15,28 @@ class Mapper
      *
      * @var MongoDB
      */
-    protected static $_database;
+    protected static $database;
 
     /**
      * Class to return.
      *
      * @var string
      */
-    protected $_modelClassName;
+    protected $modelClassName;
 
     /**
      * MongoCursor returned with find.
      *
      * @var \MongoCursor
      */
-    protected $_cursor;
+    protected $cursor;
 
     /**
      * Keeps information about join like operations to perform.
      *
      * @var array
      */
-    protected $_joins = array();
+    protected $joins = array();
 
     /**
      * Sest model class name and fetch type.
@@ -48,12 +48,12 @@ class Mapper
     public function __construct($modelClass = null)
     {
         if (!empty($modelClass)) {
-            $this->_modelClassName = $modelClass;
-        } elseif (empty($this->_modelClassName)) {
+            $this->modelClassName = $modelClass;
+        } elseif (empty($this->modelClassName)) {
             throw new \Exception('Mapper needs to know model class.');
         }
 
-        if (empty(static::$_database)) {
+        if (empty(static::$database)) {
             throw new \Exception('Give me some database. You can pass it with setDatabase function.');
         }
     }
@@ -68,7 +68,7 @@ class Mapper
     public function __call($functionName, $functionArguments)
     {
         return call_user_func_array(
-            array($this->_getModelCollection(), $functionName),
+            array($this->getModelCollection(), $functionName),
             $functionArguments
         );
     }
@@ -84,7 +84,7 @@ class Mapper
      */
     public function find($query = array(), $fields = array())
     {
-        $this->_cursor = $this->_getModelCollection()->find($query, $fields);
+        $this->cursor = $this->getModelCollection()->find($query, $fields);
 
         return $this;
     }
@@ -100,9 +100,9 @@ class Mapper
      */
     public function findOne($query = array(), $fields = array())
     {
-        $result = $this->_getModelCollection()->findOne($query, $fields);
+        $result = $this->getModelCollection()->findOne($query, $fields);
 
-        return $this->_fetchOne($result);
+        return $this->fetchOne($result);
     }
 
     /**
@@ -133,9 +133,9 @@ class Mapper
      */
     public function findAndModify($query, $update = array(), $fields = array(), $options = array())
     {
-        $result = $this->_getModelCollection()->findAndModify($query, $update, $fields, $options);
+        $result = $this->getModelCollection()->findAndModify($query, $update, $fields, $options);
 
-        return $this->_fetchOne($result);
+        return $this->fetchOne($result);
     }
 
     /**
@@ -147,7 +147,7 @@ class Mapper
      */
     protected function fetchObject($result)
     {
-        return is_array($result) ? new $this->_modelClassName($result) : null;
+        return is_array($result) ? new $this->modelClassName($result) : null;
     }
 
 
@@ -162,7 +162,7 @@ class Mapper
      */
     public function join($variable, $class, $toVariable = null, $fields = array())
     {
-        $this->_joins[] = array('variable' => $variable,
+        $this->joins[] = array('variable' => $variable,
                                   'class' => $class,
                                   'to_variable' => $toVariable,
                                   'fields' => $fields,
@@ -181,12 +181,12 @@ class Mapper
      */
     public function getPaginator($perPage = 10, $page = 1, $options = null)
     {
-        $this->_checkCursor();
-        $total = $this->_cursor->count();
-        $this->_cursor->skip(($page -1) * $perPage)->limit($perPage);
+        $this->checkCursor();
+        $total = $this->cursor->count();
+        $this->cursor->skip(($page -1) * $perPage)->limit($perPage);
         $result = $this->get();
 
-        return $this->_createPaginator($result, $total, $perPage, $page, $options);
+        return $this->createPaginator($result, $total, $perPage, $page, $options);
     }
 
     /**
@@ -196,9 +196,9 @@ class Mapper
      */
     public function get()
     {
-        $this->_checkCursor();
+        $this->checkCursor();
         $result = array();
-        foreach ($this->_cursor as $key => $item) {
+        foreach ($this->cursor as $key => $item) {
             $d = get_object_vars($item->bsonSerialize());
             $d =  $this->fetchObject($d);
 
@@ -206,27 +206,6 @@ class Mapper
         }
 
         return $result;
-/*
-        switch ($this->_fetchType) {
-            case self::FETCH_OBJECT_NO_KEYS:
-                $result = array();
-                foreach ($this->_cursor as $key => $item) {
-                    $result[] = $this->fetchObject($item);
-                }
-
-                return $this->_performJoins($result);
-                break;
-
-            default:
-                $result = array();
-                foreach ($this->_cursor as $key => $item) {
-                    $result[$key] = $this->fetchObject($item);
-                }
-
-                return $this->_performJoins($result);
-            break;
-        }
-*/
     }
 
     /**
@@ -236,7 +215,7 @@ class Mapper
      */
     public function getCursor()
     {
-        return $this->_cursor;
+        return $this->cursor;
     }
 
     /**
@@ -249,9 +228,9 @@ class Mapper
     public static function setDatabase($database)
     {
         if ($database instanceof \MongoDB\Database) {
-            static::$_database = array('default' => $database);
+            static::$database = array('default' => $database);
         } elseif (is_array($database)) {
-            static::$_database = $database;
+            static::$database = $database;
         } else {
             throw new \Exception('Database must be an array fo MongoDb objects or MongoDb object');
         }
@@ -264,21 +243,21 @@ class Mapper
      */
     public static function getDatabase()
     {
-        return self::$_database;
+        return self::$database;
     }
 
     /**
      * Get connection to collection for mapper's model.
      */
-    protected function _getModelCollection()
+    protected function getModelCollection()
     {
-        $modelClass = $this->_modelClassName;
+        $modelClass = $this->modelClassName;
         $collectionName = $modelClass::getCollectionName();
         $connectionName = $modelClass::getConnectionName();
         if (!empty($connectionName)) {
-            $database = self::$_database[ $connectionName ];
+            $database = self::$database[ $connectionName ];
         } else {
-            $database = reset(self::$_database);
+            $database = reset(self::$database);
         }
 
         return $database->$collectionName;
@@ -291,7 +270,7 @@ class Mapper
      *
      * @return Model
      */
-    protected function _fetchOne($array)
+    protected function fetchOne($array)
     {
         if (is_null($array)) {
             return;
@@ -316,10 +295,10 @@ class Mapper
      *
      * @throws \Exception
      */
-    protected function _createPaginator($results, $totalCount, $perPage, $page, $options)
+    protected function createPaginator($results, $totalCount, $perPage, $page, $options)
     {
         throw new \Exception('If you want to get paginator '.
-            'please extend mapper class implementing _createPaginator function. '.
+            'please extend mapper class implementing createPaginator function. '.
             'You have a set of params. Return whatever you want.');
     }
 
@@ -328,9 +307,9 @@ class Mapper
      *
      * @throws \Exception
      */
-    protected function _checkCursor()
+    protected function checkCursor()
     {
-        if (empty($this->_cursor)) {
+        if (empty($this->cursor)) {
             throw new \Exception('There is no cursor, so you can not get anything');
         }
     }
@@ -346,9 +325,9 @@ class Mapper
      *
      * @return array
      */
-    protected function _performJoins(array $array)
+    protected function performJoins(array $array)
     {
-        foreach ($this->_joins as $join) {
+        foreach ($this->joins as $join) {
             reset($array);
 
             $toVariable = !empty($join['to_variable']) ? $join['to_variable'] : $join['variable'];
@@ -364,7 +343,7 @@ class Mapper
                     }
                 }
                 if (count($ids)) {
-                    $joined = $class::getMapper(Mapper::FETCH_OBJECT)->find(array('_id' => array('$in' => $ids)), $fields)->get();
+                    $joined = $class::getMapper(Mapper::FETCH_OBJECT)->find(['_id' => ['$in' => $ids]], $fields)->get();
                     foreach ($array as $item) {
                         if (isset($item->$variable) && ($item->$variable instanceof \MongoDB\BSON\ObjectID)) {
                             $item->$toVariable = $joined[ (string) $item->$variable ];

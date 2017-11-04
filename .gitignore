@@ -1,5 +1,6 @@
 report/
 vendor/
+build/
 test-old/
 README-temp.md
 composer.lock

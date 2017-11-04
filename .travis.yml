@@ -18,6 +18,10 @@ before_install:
 install:
     - composer install
 
+after_script:
+  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls -v
+
 notifications:
   email:
     - jose.gilmolina@gmail.com

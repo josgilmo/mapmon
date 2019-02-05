@@ -64,7 +64,7 @@ class MapperTest extends TestCase
                 $model = $this->prophesize(Model::class);
                 //$modelProphecy->_collectionName = "collection";
                 $mapper = new Mapper($model->reveal());
-        
+
                 //$result = $mapper->fetchObject($data);
                 $this->assertInstanceOf('\Model\Simple', $result);
                 $this->assertSame($data, get_object_vars($result));

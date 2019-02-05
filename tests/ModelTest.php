@@ -1,6 +1,6 @@
 <?php
 
-namespace Mapmon\Tests;
+namespace Mapmon;
 
 use PHPUnit\Framework\TestCase;
 
@@ -10,26 +10,55 @@ class ModelTest extends TestCase
 {
     public function testFill()
     {
-        $model = new Model();
-        $model->fill(['field1'=> 'value1']);
+        $model = Model::create(['field1'=> 'value1']);
         $this->assertEquals('value1', $model->field1);
     }
 
     public function testFillComplex()
     {
-        $model = new Model();
-        $model->fill(['field1'=>'value1',  'field2' => ['fieldIn1' => "valueIn1"]]);
+        $model = Model::create(['field1'=>'value1',  'field2' => ['fieldIn1' => "valueIn1"]]);
         $this->assertEquals('value1', $model->field1);
         $this->assertEquals('valueIn1', $model->field2['fieldIn1']);
     }
 
     public function testFillWithId()
     {
-        $model = new Model();
-        $model->_id = "DFKDF";
-        $model->fill(['field1' => 'value1']);
+        $model = Model::create(["_id" => "DFKDF", 'field1' => 'value1']);
         $this->assertEquals('value1', $model->field1);
         $this->assertEquals('DFKDF', $model->id);
+    }
+
+
+    public function testCreateWithEmbebedObject()
+    {
+        require 'SampleEmbebedModel.php';
+        require 'Address.php';
+
+        $model = SampleEmbebedModel::create(
+            ["name" => "My name", "address" => ["city" => "Málaga", "country" => "Spain"]]
+        );
+        
+        $this->assertEquals("My name", $model->name);
+        $this->assertEquals('Málaga', $model->address->city);
+        $this->assertInstanceOf(Address::class, $model->address);
+    }
+
+    public function testCreateWithEmbebedListObject()
+    {
+        require 'SampleEmbebedModel.php';
+        require 'Address.php';
+
+        $model = SampleEmbebedModel::create(
+            ["name" => "My name", "addressList" => [
+                ["city" => "Málaga", "country" => "Spain"],
+                ["city" => "Barcelona", "country" => "Spain"]
+             ]
+             ]
+        );
+        
+        $this->assertEquals("My name", $model->name);
+        $this->assertEquals('Málaga', $model->addressList[0]->city);
+        $this->assertInstanceOf(Address::class, $model->addressList[0]);
     }
 
     public function testGetMapper()
@@ -42,10 +71,7 @@ class ModelTest extends TestCase
         $this->assertInstanceOf(\Mapmon\Mapper::class, $mapper);
     }
 
-    public function testGetCollectionName()
-    {
-        $this->markTestIncomplete();
-    }
+
 
     /**
      * @expectedException Exception

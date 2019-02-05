@@ -81,9 +81,9 @@ class Model
      *
      * @param array $array
      */
-    public function __construct($array = [])
+    public static function create($array = [])
     {
-        $this->fill($array);
+        return self::fill($array);
     }
     
     /**
@@ -102,20 +102,35 @@ class Model
     /**
      * Fills object with variables.
      * Sets embedded objects if they are registered in
-     * $_embeddedObjectLisr or $_embeddedObject.
+     * $embeddedObjectLisr or $embeddedObject.
      *
      * @param array $array
      */
-    public function fill($array = [])
+    public static function fill($array = [])
     {
+        $reflexion = new \ReflectionClass(get_called_class());
+        $model = $reflexion->newInstanceWithoutConstructor();
         if (!empty($array)) {
             foreach ($array as $key => $value) {
-                $this->$key = $value;
+                if (in_array($key, array_keys(static::$embeddedObjectList)) && is_array($value)) {
+                    $model ->{$key} = [];
+                    foreach ($value as $eKey => $eData) {
+                        if (is_array($eData)) {
+                            $model ->{$key}[ $eKey ] = static::$embeddedObjectList[ $key ]::create($eData);
+                        }
+                    }
+                } elseif (in_array($key, array_keys(static::$embeddedObject)) && is_array($value)) {
+                    $model->{$key} = static::$embeddedObject[$key]::create(($value));
+                } else {
+                    $model->$key = $value;
+                }
             }
-            if (!empty($this->_id)) {
-                $this->id = (string) $this->_id;
+            if (!empty($model->_id)) {
+                $model->id = (string) $model->_id;
             }
         }
+
+        return $model;
     }
     
     /**

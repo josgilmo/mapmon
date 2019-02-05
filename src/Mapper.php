@@ -147,7 +147,7 @@ class Mapper
      */
     protected function fetchObject($result)
     {
-        return is_array($result) ? new $this->modelClassName($result) : null;
+        return is_array($result) ? $this->modelClassName::create($result) : null;
     }
 
 

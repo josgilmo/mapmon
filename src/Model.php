@@ -112,10 +112,10 @@ class Model
         $model = $reflexion->newInstanceWithoutConstructor();
         if (!empty($array)) {
             foreach ($array as $key => $value) {
-                if (in_array($key, array_keys(static::$embeddedObjectList)) && is_array($value)) {
+                if (in_array($key, array_keys(static::$embeddedObjectList)) && (is_array($value) || $value instanceof \MongoDB\Model\BSONArray)) {
                     $model ->{$key} = [];
                     foreach ($value as $eKey => $eData) {
-                        if (is_array($eData)) {
+                        if (is_array($eData) || $eData instanceof \MongoDB\Model\BSONDocument) {
                             $model ->{$key}[ $eKey ] = static::$embeddedObjectList[ $key ]::create($eData);
                         }
                     }

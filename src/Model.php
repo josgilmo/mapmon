@@ -114,6 +114,7 @@ class Model
             foreach ($array as $key => $value) {
                 if (in_array($key, array_keys(static::$embeddedObjectList)) && (is_array($value) || $value instanceof \MongoDB\Model\BSONArray)) {
                     $model ->{$key} = [];
+                    
                     foreach ($value as $eKey => $eData) {
                         if (is_array($eData) || $eData instanceof \MongoDB\Model\BSONDocument) {
                             $model ->{$key}[ $eKey ] = static::$embeddedObjectList[ $key ]::create($eData);
@@ -195,9 +196,10 @@ class Model
         unset($this->id);
 
         if ($existingDocument) {
+            // TODO: Same that in the case of insert? pass the bsonSerialize content.
             $result = static::getMapper()->updateOne(["_id" => $this->_id], ['$set' => get_object_vars($this)]);
         } else {
-            $result = static::getMapper()->insertOne(get_object_vars($this));
+            $result = static::getMapper()->insertOne($this->bsonSerialize());
         }
 
         $this->id = (string) $this->_id;

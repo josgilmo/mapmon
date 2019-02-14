@@ -196,8 +196,7 @@ class Model
         unset($this->id);
 
         if ($existingDocument) {
-            // TODO: Same that in the case of insert? pass the bsonSerialize content.
-            $result = static::getMapper()->updateOne(["_id" => $this->_id], ['$set' => get_object_vars($this)]);
+            $result = static::getMapper()->updateOne(["_id" => $this->_id], ['$set' => $this->bsonSerialize()]);
         } else {
             $result = static::getMapper()->insertOne($this->bsonSerialize());
         }

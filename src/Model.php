@@ -199,6 +199,7 @@ class Model
             $result = static::getMapper()->updateOne(["_id" => $this->_id], ['$set' => $this->bsonSerialize()]);
         } else {
             $result = static::getMapper()->insertOne($this->bsonSerialize());
+            $this->_id = $result->getInsertedId();
         }
 
         $this->id = (string) $this->_id;

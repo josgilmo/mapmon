@@ -71,8 +71,6 @@ class ModelTest extends TestCase
         $this->assertInstanceOf(\Mapmon\Mapper::class, $mapper);
     }
 
-
-
     /**
      * @expectedException Exception
      */
@@ -93,5 +91,23 @@ class ModelTest extends TestCase
         $this->markTestIncomplete();
 
         $model->remove();
+    }
+
+    public function testSetMapper()
+    {
+        $connection = new \MongoDB\Client("mongodb://mongo:27017");
+        \Mapmon\Mapper::setDatabase($connection->sample);
+
+        $mapper = new Mapper("collectionName");
+        \Mapmon\Model::setMapper($mapper);
+
+        $model = new Model();
+        $this->assertInstanceOf(Mapper::class, $model::getMapper());
+
+        require 'Address.php';
+        
+        $addres = new Address();
+        $this->assertInstanceOf(Mapper::class, $addres::getMapper());
+        $this->assertEquals("Address", $addres::getCollectionName());
     }
 }

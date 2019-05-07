@@ -23,7 +23,7 @@ class Model
      */
     protected static $connectionName = null;
 
-    private $mapper = null;
+    private static $mapper = null;
     
     /**
      * Specifies if created_at and updated_at fields
@@ -142,7 +142,16 @@ class Model
      */
     public static function getMapper($fetchType = null)
     {
+        if (isset(self::$mapper)) {
+            return self::$mapper;
+        }
+
         return  new Mapper(get_called_class(), $fetchType);
+    }
+
+    public static function setMapper(Mapper $mapper)
+    {
+        static::$mapper = $mapper;
     }
     
     /**

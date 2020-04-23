@@ -123,6 +123,9 @@ class Model
                 } elseif (in_array($key, array_keys(static::$embeddedObject)) && is_array($value)) {
                     $model->{$key} = static::$embeddedObject[$key]::create(($value));
                 } else {
+                    if ($key == "mapper") {
+                        continue;
+                    }
                     $model->$key = $value;
                 }
             }
